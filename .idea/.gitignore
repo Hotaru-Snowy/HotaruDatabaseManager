@@ -1,0 +1,5 @@
+# 默认忽略的文件
+/shelf/
+/workspace.xml
+/inspectionProfiles/
+/inspectionProfiles/Project_Default.xml
