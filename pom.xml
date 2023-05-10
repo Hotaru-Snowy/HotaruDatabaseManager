@@ -20,7 +20,7 @@
             <artifactId>SqliteDriver</artifactId>
             <version>3.41.2.1</version>
             <scope>system</scope>
-            <systemPath>${basedir}/src/main/resources/libs/sqlite-jdbc-3.41.2.1.jar</systemPath>
+            <systemPath>${basedir}/libs/sqlite-jdbc-3.41.2.1.jar</systemPath>
         </dependency>
     </dependencies>
     <build>
