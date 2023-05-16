@@ -7,7 +7,6 @@ public class SqliteConnection {
     static Statement statement = null;
     public static void test(){
         try {
-            Class.forName("org.sqlite.JDBC");
             conn = DriverManager.getConnection("jdbc:sqlite:databases/test.db");
             statement = conn.createStatement();
             statement.executeUpdate("drop table if exists tables");
@@ -15,18 +14,12 @@ public class SqliteConnection {
             statement.executeUpdate("insert into tables values('admin','admin')");
             resultSet = statement.executeQuery("SELECT * FROM tables");
 
-
             while (resultSet.next()){
                 System.out.println(resultSet.getString("name")+" "+resultSet.getString("pwd"));
             }
 
 
-        }catch (ClassNotFoundException ex){
-            System.out.println(ex.getMessage());
-            ex.printStackTrace();
-
-        }
-        catch (SQLException sqlex){
+        }catch (SQLException sqlex){
             System.out.println(sqlex.getMessage());
             sqlex.printStackTrace();
         }
