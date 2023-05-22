@@ -276,7 +276,11 @@ public class SqliteDatabase extends AbstractDatabase {
                 ri++;
                 Vector<Object> tepv = new Vector<>(columnCount);
                 for(int i=0;i<columnCount;i++){
-                    if(ri==rowIndex+1 && name.get(i).equals(columnName)) tepv.add(value);
+                    if(ri==rowIndex+1 && name.get(i).equals(columnName)){
+                        if(value!=null && value instanceof String)
+                            tepv.add("\""+value+"\"");
+                        else tepv.add(value);
+                    }
                     else {
                         if(rs.getObject(i+1)!=null && rs.getObject(i+1) instanceof String)
                             tepv.add("\""+rs.getObject(i+1)+"\"");
