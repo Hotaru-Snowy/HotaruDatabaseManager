@@ -172,7 +172,7 @@ public final class AbstractButtonListener {
             String fn = removeExtension(f.getName());
             System.out.println(f.getParent()+"\\"+fn);
             AbstractDatabase ad;
-            if(f.getParent().equals(new File("./databases/").getPath())) ad = Main.databases.register(fn, new String[]{f.getParent()});
+            if(!f.getParent().equals(new File("./databases/").getPath())) ad = Main.databases.register(fn, new String[]{f.getParent()});
             else ad = Main.databases.register(fn, null);
             if(ad!=null) {
                 try {
