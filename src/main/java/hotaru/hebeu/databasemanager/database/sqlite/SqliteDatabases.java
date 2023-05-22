@@ -6,10 +6,20 @@ import hotaru.hebeu.databasemanager.database.AbstractDatabases;
 import java.io.File;
 import java.sql.SQLException;
 
+/**
+ * Sqlite数据库注册类的实现
+ */
 public class SqliteDatabases extends AbstractDatabases {
     public SqliteDatabases(){
         super();
     }
+
+    /**
+     * {@inheritDoc}
+     * @param name 数据库名
+     * @param args 数据库地址
+     * @return SqliteDatabase 注册好的数据库，如果注册失败返回null
+     */
     @Override
     public SqliteDatabase register(String name, String[] args) {
         if(!contain(name,args)) {
@@ -25,16 +35,30 @@ public class SqliteDatabases extends AbstractDatabases {
         }
         return null;
     }
+
+    /**
+     * {@inheritDoc}
+     * @param name 数据库名
+     * @param args 数据库地址
+     * @return {@inheritDoc}
+     */
     @Override
     public boolean contain(String name, String[] args) {
         return getLibList().containsKey(getKey(name,args));
     }
 
+    /**
+     * {@inheritDoc}
+     * @param name 数据库名
+     * @param args 数据库地址
+     * @return {@inheritDoc}
+     */
     @Override
     public boolean remove(String name, String[] args) {
         if(contain(name,args)){
             try {
                 getLibList().remove(getKey(name,args)).close();
+                return true;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -42,6 +66,12 @@ public class SqliteDatabases extends AbstractDatabases {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param name 数据库名
+     * @param args 数据库地址
+     * @return AbstractDatabase 注册好的数据库，如果列表内没有则返回null
+     */
     @Override
     public AbstractDatabase getDatabase(String name, String[] args) {
         return getLibList().get(getKey(name,args));

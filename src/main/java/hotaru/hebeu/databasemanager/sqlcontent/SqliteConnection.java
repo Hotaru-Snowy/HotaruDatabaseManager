@@ -2,10 +2,18 @@ package hotaru.hebeu.databasemanager.sqlcontent;
 import java.sql.*;
 import java.util.Vector;
 
+/**
+ * @deprecated 测试用类，实际程序用不到
+ */
 public class SqliteConnection {
     static Connection conn = null;
     static ResultSet resultSet = null;
     static Statement statement = null;
+
+    /**
+     * 数据库连接测试
+     * 当做试验场地什么的
+     */
     public static void test(){
         try {
             conn = DriverManager.getConnection("jdbc:sqlite:databases/test.db");

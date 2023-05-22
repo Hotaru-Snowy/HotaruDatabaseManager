@@ -11,9 +11,12 @@ import java.awt.event.MouseEvent;
 import java.sql.*;
 import java.util.Vector;
 
+/**
+ * 右部分页面，用于显示表格
+ */
 public class RightPanel extends JPanel {
     private JTable ttable;
-    private MainPage parentFrame;
+    private final MainPage parentFrame;
     private AbstractDatabase ad;
     private String tableName;
     public RightPanel(MainPage parentFrame){
@@ -30,8 +33,8 @@ public class RightPanel extends JPanel {
         add(new JScrollPane(ttable),gbc);
         setBackground(Color.BLACK);
 
+        //右键菜单
         JPopupMenu tableMenu = new JPopupMenu();
-
         JMenuItem addColumnMI=new JMenuItem("新增列至末尾");
         JMenuItem addRowMI=new JMenuItem("新增行至末尾");
         JMenuItem deleteColumnMI=new JMenuItem("删除当前列");
@@ -48,6 +51,7 @@ public class RightPanel extends JPanel {
         //simpleTableMenu.add(addColumnMI);
         //simpleTableMenu.add(addRowMI);
 
+        //右键菜单监听
         ttable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 super.mouseClicked(evt);
@@ -67,7 +71,13 @@ public class RightPanel extends JPanel {
             }
         });
     }
-    public void putData(PreparedStatement sm){
+
+    /**
+     * 使用数据库给表格给传入数据
+     * 需要传入一个SELECT语句接口，虽然这样子会导致耦合性过高
+     * @param sm 一个准备好SELECT的语句接口
+     */
+    void putData(PreparedStatement sm){
         try {
             ResultSet rs = sm.executeQuery();
             ResultSetMetaData rmd = rs.getMetaData();
@@ -104,17 +114,31 @@ public class RightPanel extends JPanel {
             e.printStackTrace();
         }
     }
-    public void cleatTable(){
+
+    /**
+     * 清空表格数据
+     */
+    void cleatTable(){
         ttable.setModel(new DefaultTableModel());
         ad=null;
         tableName=null;
     }
-    public void setTableName(AbstractDatabase ad,String tableName){
+
+    /**
+     * 设置当前所展示的数据库和数据表
+     * @param ad 展示的数据库
+     * @param tableName 展示的数据表
+     */
+    void setTableName(AbstractDatabase ad,String tableName){
         this.ad=ad;
         this.tableName=tableName;
     }
-    public AbstractDatabase getDatabaseInShow(){return ad;}
-    public String getTableNameInShow(){return tableName;}
-    public void flashTable(){putData(ad.getTableData(tableName));}
-    public JTable getJTable(){return ttable;}
+    AbstractDatabase getDatabaseInShow(){return ad;}
+    String getTableNameInShow(){return tableName;}
+
+    /**
+     * 刷新数据
+     */
+    void flashTable(){putData(ad.getTableData(tableName));}
+    JTable getJTable(){return ttable;}
 }

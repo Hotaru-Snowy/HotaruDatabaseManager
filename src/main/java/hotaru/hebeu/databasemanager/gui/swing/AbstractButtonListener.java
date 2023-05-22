@@ -9,6 +9,10 @@ import javax.swing.tree.TreePath;
 import java.io.File;
 import java.sql.SQLException;
 
+/**
+ * 监听方法实现大类，调用数据库的主要地方
+ * 有点乱有点臃肿，但是能跑就行啦
+ */
 public final class AbstractButtonListener {
     private AbstractButtonListener(){}
     static String removeExtension(String filename) {
@@ -78,11 +82,11 @@ public final class AbstractButtonListener {
     static void registerOpenTable(AbstractButton i,MainPage parentFrame){
         i.addActionListener(e->{
             TreePath tpath = parentFrame.lp.getTree().getSelectionPath();
-            if(tpath.getPath().length == 3){
+            if (tpath != null && tpath.getPath().length == 3) {
                 String name = (String) ((DefaultMutableTreeNode) tpath.getLastPathComponent()).getUserObject();
-                AbstractDatabase ad = (AbstractDatabase) ((DefaultMutableTreeNode)tpath.getParentPath().getLastPathComponent()).getUserObject();
+                AbstractDatabase ad = (AbstractDatabase) ((DefaultMutableTreeNode) tpath.getParentPath().getLastPathComponent()).getUserObject();
                 parentFrame.putDataIntoTable(ad.getTableData(name));
-                parentFrame.rp.setTableName(ad,name);
+                parentFrame.rp.setTableName(ad, name);
             }
         });
     }
@@ -90,8 +94,7 @@ public final class AbstractButtonListener {
     static void registerDeleteTable(AbstractButton i,MainPage parentFrame){
         i.addActionListener(e->{
             TreePath tpath = parentFrame.lp.getTree().getSelectionPath();
-            System.out.println("该节点长度"+tpath.getPath().length);
-            if(tpath.getPath().length == 3){
+            if(tpath!=null && tpath.getPath().length == 3){
                 String name = (String) ((DefaultMutableTreeNode) tpath.getLastPathComponent()).getUserObject();
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode)tpath.getParentPath().getLastPathComponent();
                 AbstractDatabase ad = (AbstractDatabase) node.getUserObject();

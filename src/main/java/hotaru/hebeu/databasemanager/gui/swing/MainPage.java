@@ -9,12 +9,15 @@ import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * 主界面框架
+ */
 public class MainPage extends JFrame {
     LeftPanel lp;
     RightPanel rp;
     JMenuBar jmb;
     public MainPage(){
-        super("");
+        super("数据库管理工具");
         int width = Toolkit.getDefaultToolkit().getScreenSize().width;
         int height = Toolkit.getDefaultToolkit().getScreenSize().height;
         int windowsWidth = 1000;
@@ -43,7 +46,7 @@ public class MainPage extends JFrame {
 
         initTree();
     }
-    public void putDataIntoTable(PreparedStatement sm){
+    void putDataIntoTable(PreparedStatement sm){
         rp.putData(sm);
         try {
             if(!sm.isClosed()) sm.close();
@@ -51,27 +54,31 @@ public class MainPage extends JFrame {
             e.printStackTrace();
         }
     }
-
+    //测试窗体用的临时主函数
     public static void main(String[] args){
         MainPage m = new MainPage();
         m.setVisible(true);
     }
+    //其实这个方法或许应该放到LeftPanel里，懒得挪了。
     private void initTree(){
         File f = new File("./databases/");
         System.out.println(f.getAbsolutePath());
         if(!f.exists())f.mkdirs();
         else{
-            for(File fd : f.listFiles()){
-                if(fd.getName().endsWith(".db")){
-                    String name = AbstractButtonListener.removeExtension(fd.getName());
-                    AbstractDatabase ad = Main.databases.register(name,null);
-                    try {
-                        ad.createConnection();
-                        AbstractButtonListener.createDatabaseNode(ad, this);
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                        System.out.println("数据库文件加载失败："+name);
-                        Main.databases.remove(name,null);
+            File[] files = f.listFiles();
+            if(files!=null){
+                for(File fd : files){
+                    if(fd.isFile() && fd.getName().endsWith(".db")){
+                        String name = AbstractButtonListener.removeExtension(fd.getName());
+                        AbstractDatabase ad = Main.databases.register(name,null);
+                        try {
+                            ad.createConnection();
+                            AbstractButtonListener.createDatabaseNode(ad, this);
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                            System.out.println("数据库文件加载失败："+name);
+                            Main.databases.remove(name,null);
+                        }
                     }
                 }
             }

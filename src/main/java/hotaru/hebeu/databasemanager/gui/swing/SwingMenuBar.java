@@ -2,9 +2,12 @@ package hotaru.hebeu.databasemanager.gui.swing;
 
 import javax.swing.*;
 
+/**
+ * 构建菜单栏
+ */
 public class SwingMenuBar extends JMenuBar {
     private JMenu[] jms;
-    private MainPage parentFrame;
+    private final MainPage parentFrame;
     public SwingMenuBar(MainPage parentFrame){
         this.parentFrame=parentFrame;
         init();

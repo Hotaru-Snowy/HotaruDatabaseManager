@@ -7,6 +7,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 
+/**
+ * @deprecated 已弃用，本来是给数增添图标的但是没搞成，就先放一边。
+ */
 public class TreeIcon extends DefaultTreeCellRenderer {
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);

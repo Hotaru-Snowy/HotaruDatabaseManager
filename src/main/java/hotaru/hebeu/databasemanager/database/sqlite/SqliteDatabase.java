@@ -9,6 +9,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
+/**
+ * Sqlite实现的数据库类
+ */
 public class SqliteDatabase extends AbstractDatabase {
     private String parentPath;
     public SqliteDatabase(String n) {
@@ -19,6 +22,10 @@ public class SqliteDatabase extends AbstractDatabase {
         parentPath=adr;
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws SQLException {@inheritDoc}
+     */
     @Override
     public void createConnection() throws SQLException {
             if(parentPath!=null){
@@ -27,11 +34,15 @@ public class SqliteDatabase extends AbstractDatabase {
             loadTables();
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws SQLException {@inheritDoc}
+     */
     @Override
     protected void loadTables() throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM sqlite_master WHERE type = \"table\"");
-        tables = new TreeSet<String>();
+        tables = new TreeSet<>();
         while(resultSet.next()){
             tables.add(resultSet.getString("name"));
         }
@@ -39,6 +50,11 @@ public class SqliteDatabase extends AbstractDatabase {
         statement.close();
     }
 
+    /**
+     * {@inheritDoc}
+     * @param tableName 数据表名
+     * @throws SQLException {@inheritDoc}
+     */
     @Override
     public void createTable(String tableName) throws SQLException {
         Statement statement = connection.createStatement();
@@ -48,6 +64,10 @@ public class SqliteDatabase extends AbstractDatabase {
         statement.close();
     }
 
+    /**
+     * {@inheritDoc}
+     * @param tableName 数据表名
+     */
     @Override
     public void deleteTable(String tableName) {
         try {
@@ -60,16 +80,31 @@ public class SqliteDatabase extends AbstractDatabase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param tableName 数据表名
+     * @return {@inheritDoc}
+     */
     @Override
     public boolean contains(String tableName) {
         return tables.contains(tableName);
     }
 
+    /**
+     * {@inheritDoc}
+     * @return {@inheritDoc}
+     */
     @Override
     public Set<String> getTables() {
         return new HashSet<>(tables);
     }
 
+    /**
+     * {@inheritDoc}
+     * 默认全为空
+     * @param tableName 数据表名
+     * @throws SQLException {@inheritDoc}。如果库中有自己设定的主键也会抛出。
+     */
     @Override
     public void addNewRow(String tableName) throws SQLException {
         if(tables.contains(tableName)){
@@ -89,6 +124,13 @@ public class SqliteDatabase extends AbstractDatabase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * 由于Sqlite没有实现ResultSet的删除行方法，导致此方法删除效率极低
+     * @param tableName 目标数据表名
+     * @param rowIndex 要删除的行数
+     * @throws SQLException {@inheritDoc}
+     */
     @Override
     public void deleteRow(String tableName, int rowIndex) throws SQLException {
         if(tables.contains(tableName)){
@@ -114,15 +156,15 @@ public class SqliteDatabase extends AbstractDatabase {
             }
             rs.close();
             statement.executeUpdate("DROP TABLE IF EXISTS \""+tableName+"_hotarubackup\"");
-            StringBuffer sb = new StringBuffer("CREATE TABLE \"").append(tableName).append("_hotarubackup\" (").append("\""+name.get(0)+"\"");
-            for(int i=1;i<name.size();i++)sb.append(',').append("\""+name.get(i)+"\"");
+            StringBuffer sb = new StringBuffer("CREATE TABLE \"").append(tableName).append("_hotarubackup\" (").append("\"").append(name.get(0)).append("\"");
+            for(int i=1;i<name.size();i++) sb.append(',').append("\"").append(name.get(i)).append("\"");
             sb.append(')');
             System.out.println(sb);
             statement.executeUpdate(sb.toString());
-            for(int i=0;i<data.size();i++){
-                sb=new StringBuffer("INSERT INTO \""+tableName+"_hotarubackup\" VALUES (").append(data.get(i).get(0));
-                for(int j=1;j<data.get(i).size();j++)
-                    sb.append(',').append(data.get(i).get(j));
+            for (Vector<Object> datum : data) {
+                sb = new StringBuffer("INSERT INTO \"" + tableName + "_hotarubackup\" VALUES (").append(datum.get(0));
+                for (int j = 1; j < datum.size(); j++)
+                    sb.append(',').append(datum.get(j));
                 sb.append(')');
                 System.out.println(sb);
                 statement.executeUpdate(sb.toString());
@@ -135,6 +177,12 @@ public class SqliteDatabase extends AbstractDatabase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param tableName 数据表名
+     * @param columnName 要加入的列的列名
+     * @throws SQLException {@inheritDoc}
+     */
     @Override
     public void addNewColumn(String tableName, String columnName) throws SQLException {
         if(tables.contains(tableName)){
@@ -144,6 +192,13 @@ public class SqliteDatabase extends AbstractDatabase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * 由于Sqlite自己本身没有删除列方法，导致此方法删除效率极低
+     * @param tableName 目标数据表名
+     * @param columnName 要删除的目标列名
+     * @throws SQLException {@inheritDoc}
+     */
     @Override
     public void deleteColumn(String tableName, String columnName) throws SQLException {
         if(tables.contains(tableName)){
@@ -173,15 +228,15 @@ public class SqliteDatabase extends AbstractDatabase {
             }
             rs.close();
             statement.executeUpdate("DROP TABLE IF EXISTS \""+tableName+"_hotarubackup\"");
-            StringBuffer sb = new StringBuffer("CREATE TABLE \"").append(tableName).append("_hotarubackup\" (").append("\""+name.get(0)+"\"");
-            for(int i=1;i<name.size();i++)sb.append(',').append("\""+name.get(i)+"\"");
+            StringBuffer sb = new StringBuffer("CREATE TABLE \"").append(tableName).append("_hotarubackup\" (").append("\"").append(name.get(0)).append("\"");
+            for(int i=1;i<name.size();i++) sb.append(',').append("\"").append(name.get(i)).append("\"");
             sb.append(')');
             System.out.println(sb);
             statement.executeUpdate(sb.toString());
-            for(int i=0;i<data.size();i++){
-                sb=new StringBuffer("INSERT INTO \""+tableName+"_hotarubackup\" VALUES (").append(data.get(i).get(0));
-                for(int j=1;j<data.get(i).size();j++)
-                    sb.append(',').append(data.get(i).get(j));
+            for (Vector<Object> datum : data) {
+                sb = new StringBuffer("INSERT INTO \"" + tableName + "_hotarubackup\" VALUES (").append(datum.get(0));
+                for (int j = 1; j < datum.size(); j++)
+                    sb.append(',').append(datum.get(j));
                 sb.append(')');
                 System.out.println(sb);
                 statement.executeUpdate(sb.toString());
@@ -194,6 +249,16 @@ public class SqliteDatabase extends AbstractDatabase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * 由于Sqlite没有实现ResultSet的update方法，而本身就不能通过其他手段（例如主键）定位行，导致此方法删除效率极低
+     * 这里也是最诟病的地方，比上面两个还烦，垃圾Sqlite，狗都不用
+     * @param tableName 数据表名
+     * @param columnName 目标列名
+     * @param rowIndex 目标行序号
+     * @param value 修改前的值
+     * @throws SQLException {@inheritDoc}
+     */
     @Override
     public void editValue(String tableName, String columnName, int rowIndex, Object value) throws SQLException {
         if(tables.contains(tableName)){
@@ -222,15 +287,15 @@ public class SqliteDatabase extends AbstractDatabase {
             }
             rs.close();
             statement.executeUpdate("DROP TABLE IF EXISTS \""+tableName+"_hotarubackup\"");
-            StringBuffer sb = new StringBuffer("CREATE TABLE \"").append(tableName).append("_hotarubackup\" (").append("\""+name.get(0)+"\"");
-            for(int i=1;i<name.size();i++)sb.append(',').append("\""+name.get(i)+"\"");
+            StringBuffer sb = new StringBuffer("CREATE TABLE \"").append(tableName).append("_hotarubackup\" (").append("\"").append(name.get(0)).append("\"");
+            for(int i=1;i<name.size();i++) sb.append(',').append("\"").append(name.get(i)).append("\"");
             sb.append(')');
             System.out.println(sb);
             statement.executeUpdate(sb.toString());
-            for(int i=0;i<data.size();i++){
-                sb=new StringBuffer("INSERT INTO \""+tableName+"_hotarubackup\" VALUES (").append(data.get(i).get(0));
-                for(int j=1;j<data.get(i).size();j++)
-                    sb.append(',').append(data.get(i).get(j));
+            for (Vector<Object> datum : data) {
+                sb = new StringBuffer("INSERT INTO \"" + tableName + "_hotarubackup\" VALUES (").append(datum.get(0));
+                for (int j = 1; j < datum.size(); j++)
+                    sb.append(',').append(datum.get(j));
                 sb.append(')');
                 System.out.println(sb);
                 statement.executeUpdate(sb.toString());
@@ -243,12 +308,16 @@ public class SqliteDatabase extends AbstractDatabase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param tableName 目标数据表名
+     * @return {@inheritDoc}
+     */
     @Override
     public PreparedStatement getTableData(String tableName) {
         if(tables.contains(tableName)){
             try {
-                PreparedStatement statement = connection.prepareStatement("SELECT * FROM \""+tableName+"\"");
-                return statement;
+                return connection.prepareStatement("SELECT * FROM \""+tableName+"\"");
             } catch (SQLException e) {
                 e.printStackTrace();
             }

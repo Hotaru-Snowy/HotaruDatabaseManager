@@ -8,10 +8,13 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * 左部分页面，用于显示层次树
+ */
 public class LeftPanel extends JPanel {
-    private JTree sqltree;
-    private DefaultMutableTreeNode root;
-    private MainPage parentFrame;
+    private final JTree sqltree;
+    private final DefaultMutableTreeNode root;
+    private final MainPage parentFrame;
     public LeftPanel(MainPage parentFrame){
         this.parentFrame = parentFrame;
         GridBagLayout gbl=new GridBagLayout();
@@ -26,6 +29,7 @@ public class LeftPanel extends JPanel {
         gbc.weighty=1;
         add(new JScrollPane(sqltree),gbc);
 
+        //对数据库的右键菜单
         JPopupMenu dbMenu = new JPopupMenu();
         JMenuItem creaTableMI=new JMenuItem("新建表");
         AbstractButtonListener.registerCreateTable(creaTableMI,this.parentFrame);
@@ -33,7 +37,7 @@ public class LeftPanel extends JPanel {
         AbstractButtonListener.registerDeleteDatabase(deleteDBMI,this.parentFrame);
         dbMenu.add(creaTableMI);
         dbMenu.add(deleteDBMI);
-
+        //对数据表的右键菜单
         JPopupMenu tableMenu = new JPopupMenu();
         JMenuItem openTableMI=new JMenuItem("打开表");
         AbstractButtonListener.registerOpenTable(openTableMI,this.parentFrame);
@@ -60,7 +64,8 @@ public class LeftPanel extends JPanel {
         });
         //sqltree.setCellRenderer(new TreeIcon());
     }
-    public DefaultMutableTreeNode getRoot(){return root;}
-    public DefaultTreeModel getTreeModel(){return (DefaultTreeModel)sqltree.getModel();}
-    public JTree getTree(){return sqltree;}
+
+    DefaultMutableTreeNode getRoot(){return root;}
+    DefaultTreeModel getTreeModel(){return (DefaultTreeModel)sqltree.getModel();}
+    JTree getTree(){return sqltree;}
 }
