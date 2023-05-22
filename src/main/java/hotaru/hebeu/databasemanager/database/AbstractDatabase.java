@@ -1,7 +1,5 @@
 package hotaru.hebeu.databasemanager.database;
 
-import com.sun.istack.internal.Nullable;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -36,7 +34,6 @@ abstract public class AbstractDatabase {
      * 获取当前数据库的连接
      * @return Connection 返回数据库连接，如果没有创建连接则可能是null
      */
-    @Nullable
     public Connection getConnection(){return connection;}
 
     /**
@@ -69,7 +66,6 @@ abstract public class AbstractDatabase {
      * 获取数据表名的列表
      * @return Set 一个数据表名构成的集合，如果数据库连接从未创建则有可能为null
      */
-    @Nullable
     abstract public Set<String> getTables();
 
     /**

@@ -1,7 +1,5 @@
 package hotaru.hebeu.databasemanager.database;
 
-import com.sun.istack.internal.Nullable;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +19,6 @@ abstract public class AbstractDatabases {
      * @param args 数据库地址
      * @return AbstractDatabase 注册好的数据库，如果注册失败返回null
      */
-    @Nullable
     abstract public AbstractDatabase register(String name, String[] args);
 
     /**
@@ -46,7 +43,6 @@ abstract public class AbstractDatabases {
      * @param args 数据库地址
      * @return AbstractDatabase 注册好的数据库，如果列表内没有则返回null
      */
-    @Nullable
     abstract public AbstractDatabase getDatabase(String name,String[] args);
 
     protected Map<String,AbstractDatabase> getLibList(){return libList;}

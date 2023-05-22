@@ -4,4 +4,4 @@ Built-By: Dobe
 Created-By: Apache Maven 3.8.1
 Build-Jdk: 1.8.0_192
 Main-Class: hotaru.hebeu.databasemanager.Main
-Class-Path: libs/sqlite-jdbc-3.41.2.1.jar
+Class-Path: libs/sqlite-jdbc.jar
